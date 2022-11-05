@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.covoiturage.covoiturage.entity.Annonce;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
@@ -29,6 +30,10 @@ public class UserController {
 	@Qualifier("userService")
 	private Services<User> userService;
 
+	@Autowired
+	@Qualifier("annonceService")
+	private Services<Annonce> annonceService;
+
 
 	@Autowired
 	private UserDAO ud;
@@ -48,31 +53,51 @@ public class UserController {
 
 	@GetMapping("/registration")
 	public String UserRegistration(@ModelAttribute("user") User theUser) {
-
 		return "saveUser";
 	}
-	
+
+
+	@PostMapping("/saveUser")
+	public String saveUser(@ModelAttribute("user") User theUser,
+						   @Nullable @RequestParam("newPassword") String value) {
+
+		if (value != null) {
+			theUser.setPassword(value);
+		}
+		userService.save(theUser);
+		return "redirect:/registration-success";
+	}
+
+
 	@GetMapping("/registration-success")
 	public String UserRegistrationSuccess(@ModelAttribute("user") User theUser) {
 
 		return "registration-success";
 	}
-	
-	
-	@PostMapping("/saveUser")
-	public String saveUser(@ModelAttribute("user") User theUser,
-			@Nullable @RequestParam("newPassword") String value) {
 
-	
+	@GetMapping("/creer-annonce")
+	public String CreateAnnoncePage(@ModelAttribute("annonce") Annonce theAnnonce) {
 
-		if (value != null) {
-			theUser.setPassword(value);
-		}
-
-		userService.save(theUser);
-
-		return "redirect:/registration-success";
+		return "saveAnnonce";
 	}
+
+	@PostMapping("/saveAnnonce")
+	public String saveAnnonce(@ModelAttribute("annonce") Annonce theAnnonce) {
+
+
+		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		String login = loggedInUser.getName();
+		User user = ud.findByUserName(login);
+
+		int userId= user.getId();
+
+		theAnnonce.setUserId(userId);
+
+		annonceService.save(theAnnonce);
+		return "redirect:/home";
+	}
+
+
 	
 	
 	
