@@ -42,6 +42,13 @@ public class Trajet {
 
 	}
 
+
+	public Trajet() {
+
+	}
+
+
+
 	public Trajet(int userId, int annonceId) {
 		this.userId = userId;
 		this.annonceId = annonceId;

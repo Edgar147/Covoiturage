@@ -140,4 +140,37 @@ public class UserController {
 
 
 
+
+	@GetMapping("/liste-trajets-user")
+	public String returnListOfTrajets(Model theModel) {
+
+		List<Trajet> theTrajets = trajetService.findAll();
+		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		String login = loggedInUser.getName();
+		User user = ud.findByUserName(login);
+
+		int userId= user.getId();
+		List<Integer> theAnnoncesId = new ArrayList<>();
+
+		for (int i = 0; i < theTrajets.size(); i++) {
+
+			if (theTrajets.get(i).getUserId() == userId) {
+				theAnnoncesId.add(theTrajets.get(i).getAnnonceId());
+			}
+		}
+		List<Annonce> theAnnonces= new ArrayList<>();
+
+
+		for (int i = 0; i < theAnnoncesId.size(); i++) {
+
+			theAnnonces.add(annonceService.findById(theAnnoncesId.get(i)));
+
+		}
+		// add to the spring model
+		theModel.addAttribute("annonces", theAnnonces);
+
+		return "liste-trajets-user";
+	}
+
+
 }
