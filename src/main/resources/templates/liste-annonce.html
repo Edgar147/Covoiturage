@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <title>Show Users</title>
+</head>
+
+<body>
+
+<!-- theDate comes from the theModel.addAttribure of DemoController -->
+
+
+
+
+<div class="container py-5 bg-light " style="margin-top:200px;">
+
+  <div class="form-outline mb-3" style="display: inline-block; margin-left: 32%;">
+    <h1>Show Annonces</h1>
+
+
+
+
+    <table border="1">
+
+
+
+
+      <thead>
+      <th>Date</th>
+      <th>Depart</th>
+      <th>Arrive</th>
+
+
+
+      </thead>
+
+      <tbody>
+
+      <tr th:each="tempAnnonces: ${annonces}">
+        <!--A FAIRE -->
+     <!--   <td><a th:text="${tempAnnonces.firstName}" th:href="@{/user-profile(user_id=${tempUsers.id})}" />
+        </td>-->
+        <td th:text="${tempAnnonces.date}" />
+        <td th:text="${tempAnnonces.depart}" />
+        <td th:text="${tempAnnonces.arrive}" />
+
+
+
+
+      <!--  <td><a th:href="@{/updateUser(user_id=${tempUsers.id})}"
+               class="btn btn-primary btn-sm ">Update</a>
+        </td>
+        <td><a th:href="@{/deleteUser(user_id_for_delete=${tempUsers.id})}"
+               class="btn btn-warning btn-sm ">Delete</a>
+        </td>-->
+
+      </tr>
+
+      </tbody>
+
+    </table>
+
+
+
+
+  </div>
+
+</div>
+
+
+</body>
+
+</html>

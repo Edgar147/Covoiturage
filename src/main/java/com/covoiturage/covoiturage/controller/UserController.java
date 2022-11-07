@@ -98,9 +98,19 @@ public class UserController {
 	}
 
 
-	
-	
-	
-	
-	
+	@GetMapping("/liste-annonce")
+	public String returnListOfAnnonces(Model theModel) {
+
+		List<Annonce> theAnnonces = annonceService.findAll();
+
+		// add to the spring model
+		theModel.addAttribute("annonces", theAnnonces);
+
+		return "liste-annonce";
+	}
+
+
+
+
+
 }
