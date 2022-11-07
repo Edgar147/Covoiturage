@@ -14,7 +14,19 @@ import java.util.*;
 @Table(name = "annonce")
 public class Annonce  {
 
+/*	@ManyToMany
+	@JoinTable(name = "user_annonce", joinColumns = @JoinColumn(name = "annonce_id"), inverseJoinColumns = @JoinColumn(name = "club_id"))
+	private List<User> users;*/
 
+/*
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+*/
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

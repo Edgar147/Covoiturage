@@ -62,7 +62,9 @@ public class AnnonceServiceImpl implements Services<Annonce> {
 	@Override
 	@Transactional
 	public void save(Annonce theAnnonce) {
+
 		annonceDAO.saveAnnonce(theAnnonce);
+
 
 	}
 

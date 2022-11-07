@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.covoiturage.covoiturage.dao.TrajetDAO;
 import com.covoiturage.covoiturage.entity.Annonce;
+import com.covoiturage.covoiturage.entity.Trajet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
@@ -34,9 +36,16 @@ public class UserController {
 	@Qualifier("annonceService")
 	private Services<Annonce> annonceService;
 
+	@Autowired
+	@Qualifier("trajetService")
+	private Services<Trajet> trajetService;
+
 
 	@Autowired
 	private UserDAO ud;
+
+	@Autowired
+	private TrajetDAO td;
 
 	@GetMapping("/")
 	public String LoginPage() {
@@ -109,7 +118,25 @@ public class UserController {
 		return "liste-annonce";
 	}
 
+	@GetMapping("/accepte-annonce")
+	public String AccepterAnnonce(@ModelAttribute("annonce_id") int annonce_id, Model theModel) {
 
+
+
+
+		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		String login = loggedInUser.getName();
+		User user = ud.findByUserName(login);
+
+		int userId= user.getId();
+
+		//Annonce theAnnonce = annonceService.findById(annonce_id);
+		Trajet tr=new Trajet(userId,annonce_id);
+
+		trajetService.save(tr);
+
+		return "redirect:/home";
+	}
 
 
 
