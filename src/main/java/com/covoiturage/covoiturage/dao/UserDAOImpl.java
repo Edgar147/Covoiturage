@@ -1,7 +1,6 @@
 package com.covoiturage.covoiturage.dao;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -15,7 +14,7 @@ public class UserDAOImpl implements UserDAO {
 
 	// define field for entityManager, EM is for working with entities(search by id,
 	// remove...
-	private EntityManager entityManager;
+	private EntityManager entityManager; //ça vient de JPA
 
 	// set up constructor injection
 	@Autowired

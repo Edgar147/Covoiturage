@@ -1,14 +1,15 @@
 package com.covoiturage.covoiturage.dao;
 
 import com.covoiturage.covoiturage.entity.Annonce;
-import com.covoiturage.covoiturage.entity.Role;
-import com.covoiturage.covoiturage.entity.User;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository //
 public class AnnonceDAOImpl implements AnnonceDAO {
@@ -34,4 +35,21 @@ public class AnnonceDAOImpl implements AnnonceDAO {
 
 	}
 
+	@Override
+	@Transactional
+	public List<Annonce> findAll() {
+
+		// get the current hibernate session
+		Session currentSession = entityManager.unwrap(Session.class);
+
+		// create a query
+		Query<Annonce> theQuery =
+				currentSession.createQuery("from Annonce", Annonce.class);
+
+		// execute query and get result list
+		List<Annonce> annonces = theQuery.getResultList();
+
+		// return the results
+		return annonces;
+	}
 }

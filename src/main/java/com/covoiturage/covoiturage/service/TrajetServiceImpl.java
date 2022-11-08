@@ -1,11 +1,8 @@
 package com.covoiturage.covoiturage.service;
 
-import com.covoiturage.covoiturage.dao.AnnonceDAO;
 import com.covoiturage.covoiturage.dao.TrajetDAO;
-import com.covoiturage.covoiturage.entity.Annonce;
 import com.covoiturage.covoiturage.entity.Trajet;
 import com.covoiturage.covoiturage.entity.User;
-import com.covoiturage.covoiturage.repository.AnnonceRepository;
 import com.covoiturage.covoiturage.repository.TrajetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

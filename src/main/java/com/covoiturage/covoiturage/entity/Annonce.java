@@ -1,32 +1,16 @@
 package com.covoiturage.covoiturage.entity;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
 
 
 @Entity
 @Table(name = "annonce")
 public class Annonce  {
 
-/*	@ManyToMany
-	@JoinTable(name = "user_annonce", joinColumns = @JoinColumn(name = "annonce_id"), inverseJoinColumns = @JoinColumn(name = "club_id"))
-	private List<User> users;*/
-
-/*
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-*/
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

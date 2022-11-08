@@ -1,10 +1,7 @@
 package com.covoiturage.covoiturage.controller;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.covoiturage.covoiturage.dao.TrajetDAO;
 import com.covoiturage.covoiturage.entity.Annonce;
@@ -96,7 +93,7 @@ public class UserController {
 
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String login = loggedInUser.getName();
-		User user = ud.findByUserName(login);
+		User user = userService.findByUserName(login);
 
 		int userId= user.getId();
 
@@ -126,7 +123,7 @@ public class UserController {
 
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String login = loggedInUser.getName();
-		User user = ud.findByUserName(login);
+		User user = userService.findByUserName(login);//ud
 
 		int userId= user.getId();
 
@@ -147,7 +144,7 @@ public class UserController {
 		List<Trajet> theTrajets = trajetService.findAll();
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String login = loggedInUser.getName();
-		User user = ud.findByUserName(login);
+		User user = userService.findByUserName(login);
 
 		int userId= user.getId();
 		List<Integer> theAnnoncesId = new ArrayList<>();

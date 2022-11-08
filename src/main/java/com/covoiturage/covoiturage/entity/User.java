@@ -15,25 +15,7 @@ import com.covoiturage.covoiturage.entity.Role;
 @Table(name = "user")
 public class User implements UserDetails {
 
-/*	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "trajet", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "annonce_id"))
-	private List<Annonce> annonces;*/
 
-/*
-	public List<Annonce> getAnnonces() {
-		return annonces;
-	}
-
-	public void setAnnonces(List<Annonce> annonces) {
-		this.annonces = annonces;
-	}
-*/
-
-	/*@OneToMany
-	private List<Annonce>  = new ArrayList<>();
-
-	*/
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
