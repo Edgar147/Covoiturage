@@ -32,6 +32,7 @@
       <th>Date</th>
       <th>Depart</th>
       <th>Arrive</th>
+      <th>Status</th>
 
 
 
@@ -50,9 +51,13 @@
         <td th:text="${tempAnnonces.arrive}" />
 
 
-
-
-
+<td><span th:switch="${statusList[tempAnnoncesStat.index]}">
+                              <span th:case="1">AAccepté</span>
+                              <span th:case="2">RRefusé</span>
+                              <span th:case="3">Vous conduct</span>
+                              <span th:case="4">Demande envoyée</span>
+                          </span>
+</td>
       </tr>
 
       </tbody>

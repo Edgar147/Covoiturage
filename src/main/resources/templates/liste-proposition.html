@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <title>Show Propositions</title>
+</head>
+
+<body>
+
+<!-- theDate comes from the theModel.addAttribure of xController -->
+
+
+
+
+<div class="container py-5 bg-light " style="margin-top:200px;">
+
+  <div class="form-outline mb-3" style="display: inline-block; margin-left: 32%;">
+    <h1>Show Annonces</h1>
+
+
+
+
+    <table border="1">
+
+
+
+
+      <thead>
+      <th>Date</th>
+      <th>Depart</th>
+      <th>Arrive</th>
+      <th>Prenom,Nom </th>
+      <th>Status</th>
+
+
+
+      </thead>
+
+      <tbody>
+
+      <tr th:each="tempAnnonces: ${annonces}">
+
+<span th:if="${reponseConducteur[tempAnnoncesStat.index]} != 3" >
+
+        <td th:text="${tempAnnonces.date}" />
+        <td th:text="${tempAnnonces.depart}" />
+        <td th:text="${tempAnnonces.arrive}" />
+
+        <!--  <td>
+        <span th:if="${#lists.contains(userAnnonceIds,tempAnnonces.id)}">
+                  Demand envoyé
+        </span>
+              <span th:unless="${#lists.contains(userAnnonceIds,tempAnnonces.id)}">
+          <a th:text="Participer" th:href="@{/accepte-annonce(annonce_id=${tempAnnonces.id})}" />
+        </span>
+
+          </td>-->
+
+
+
+          <td th:text="${usersNomPrenom[tempAnnoncesStat.index]}" />
+
+
+      <td>
+
+
+        <span th:if="${reponseConducteur[tempAnnoncesStat.index]} == 0" >
+   <a th:text="Accepter" th:href="@{/accepte-proposition/{id1}/{id2}    (id1=${proposedUserId[tempAnnoncesStat.index]}    , id2=${tempAnnonces.id})    }" />
+        <a th:text="Refuser" th:href="@{/refuse-proposition/{id1}/{id2}    (id1=${proposedUserId[tempAnnoncesStat.index]}    ,id2=${tempAnnonces.id})    }" />
+
+             </span>
+        <span th:if="${reponseConducteur[tempAnnoncesStat.index]} == 1" >
+                Accepté
+             </span>
+        <span th:if="${reponseConducteur[tempAnnoncesStat.index]} == 2" >
+                Refusé
+             </span>
+
+
+
+
+
+
+
+
+
+
+
+        </td>
+    </span>
+
+
+      </tr>
+
+
+
+      </tbody>
+
+    </table>
+
+
+
+
+  </div>
+
+</div>
+
+
+</body>
+
+</html>

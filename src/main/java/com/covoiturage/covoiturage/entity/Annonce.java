@@ -31,6 +31,8 @@ public class Annonce  {
 	@Column(name = "arrive")
 	private String arrive;
 
+
+
 	public int getId() {
 		return id;
 	}

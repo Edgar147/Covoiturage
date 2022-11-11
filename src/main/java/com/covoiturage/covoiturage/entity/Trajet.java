@@ -19,14 +19,35 @@ public class Trajet {
 	@Column(name = "annonce_id")
 	private int annonceId;
 
+	@Column(name = "est_accepte")
+	private int estAccepte;
 
-	public Trajet(int id, int userId, int annonceId) {
+	@Column(name = "conducteur_id")
+	private int conducteurId;
+
+	public int getEstAccepte() {
+		return estAccepte;
+	}
+
+	public void setEstAccepte(int estAccepte) {
+		this.estAccepte = estAccepte;
+	}
+
+	public int getConducteurId() {
+		return conducteurId;
+	}
+
+	public void setConducteurId(int conducteurId) {
+		this.conducteurId = conducteurId;
+	}
+
+	public Trajet(int userId, int annonceId , int conducteurId, int estAccepte) {
 		this.id = id;
 		this.userId = userId;
 		this.annonceId = annonceId;
-
+		this.estAccepte = estAccepte;
+		this.conducteurId = conducteurId;
 	}
-
 
 	public Trajet() {
 
