@@ -1,11 +1,20 @@
 package com.covoiturage.covoiturage.controller;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.covoiturage.covoiturage.dao.TrajetDAO;
 import com.covoiturage.covoiturage.entity.Annonce;
 import com.covoiturage.covoiturage.entity.Trajet;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
@@ -24,6 +33,7 @@ import com.covoiturage.covoiturage.service.Services;
 
 @Controller
 public class UserController {
+	Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	@Qualifier("userService")
@@ -71,7 +81,16 @@ public class UserController {
 
 	@PostMapping("/saveUser")
 	public String saveUser(@ModelAttribute("user") User theUser,
-						   @Nullable @RequestParam("newPassword") String value) {
+						   @Nullable @RequestParam("newPassword") String value) throws MalformedURLException, ParseException, JsonProcessingException {
+		URL url=new URL("https://c363cd03-adfa-4394-8a07-3a0a269acdf5.mock.pstmn.io/numeroEtudiant");
+		String EtudiantsAPI=theUser.getEtudiantAPI(url);
+/*
+		JSONParser parse = new JSONParser(EtudiantsAPI);
+*/
+		//logger.info("bbbbbbbbbbb"+parse.list().toString());
+		ObjectMapper mapper = new ObjectMapper();
+		List<Integer> list2 = Arrays.asList(mapper.readValue(EtudiantsAPI, Integer[].class));
+		logger.info("bbbbbbbbbbb2222222"+ list2.get(0));
 
 
 		if (value != null) {
@@ -203,7 +222,7 @@ public class UserController {
 			trajetService.save(tr);
 		}
 
-		return "redirect:/home";
+		return "redirect:/liste-annonce";
 	}
 
 
@@ -360,5 +379,29 @@ public class UserController {
 
 
 
+	@GetMapping("/details")
+	public String DetailsTrajet(@ModelAttribute("annonce_id") int annonceId, Model theModel) {
+
+		List<Integer> userIds= new ArrayList<>();
+
+		List<Trajet> theTrajets = trajetService.findAll();
+		List<User> userList =new ArrayList<>();
+
+		for (int i = 0; i < theTrajets.size(); i++) {
+			if((theTrajets.get(i).getAnnonceId()==annonceId)&&(theTrajets.get(i).getEstAccepte() !=0)&&(theTrajets.get(i).getEstAccepte() !=2)&&(theTrajets.get(i).getEstAccepte() !=4)){
+				userIds.add(theTrajets.get(i).getUserId());
+			}
+		}
+
+
+		for (int i = 0; i < userIds.size(); i++) {
+			userList.add(userService.findById(userIds.get(i)));
+		}
+		theModel.addAttribute("userList", userList);
+
+
+
+		return "details";
+		}
 
 }

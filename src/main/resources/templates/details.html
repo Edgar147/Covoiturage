@@ -5,7 +5,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-  <title>Show Users</title>
+  <title>Details</title>
 </head>
 
 <body>
@@ -18,7 +18,7 @@
 <div class="container py-5 bg-light " style="margin-top:200px;">
 
   <div class="form-outline mb-3" style="display: inline-block; margin-left: 32%;">
-    <h1>Show Annonces</h1>
+    <h1>Show Details</h1>
 
 
 
@@ -29,10 +29,9 @@
 
 
       <thead>
-      <th>Date</th>
-      <th>Depart</th>
-      <th>Arrive</th>
-      <th>Status</th>
+      <th>Nom</th>
+      <th>Prenom</th>
+
 
 
 
@@ -40,20 +39,17 @@
 
       <tbody>
 
-      <tr th:each="tempAnnonces: ${annonces}">
+      <tr th:each="user: ${userList}">
         <!--A FAIRE -->
        <!-- <td><a th:text="${tempAnnonces.id}" th:href="@{/accepte-annonce(annonce_id=${tempAnnonces.id})}" />
         </td>-->
 
 
+        <td th:text="${user.firstName}" />
+        <td th:text="${user.lastName}" />
 
 
 
-        <td th:text="${tempAnnonces.date}" />
-        <td th:text="${tempAnnonces.depart}" />
-        <td th:text="${tempAnnonces.arrive}" />
-
-          <td>
 
 <!--
               <span th:if="${tempAnnonces.id}==${userAnnonceIds[tempAnnoncesStat.index]}" >
@@ -80,13 +76,13 @@
               <span th:if="${#lists.contains(userAnnonceIds,tempAnnonces.id)}">
 -->
 
-                          <span th:switch="${statusList[tempAnnoncesStat.index]}">
+            <!--              <span th:switch="${statusList[tempAnnoncesStat.index]}">
                               <span th:case="0"><a th:text="Participer" th:href="@{/accepte-annonce(annonce_id=${tempAnnonces.id})}" /></span>
                               <span th:case="1">Accepté</span>
                               <span th:case="2">Refusé</span>
                               <span th:case="3">Vous conduct</span>
                               <span th:case="4">Demande envoyée</span>
-                          </span>
+                          </span>-->
 <!--
               </span>
 -->
@@ -113,7 +109,7 @@
           <a th:text="Participer" th:href="@{/accepte-annonce(annonce_id=${tempAnnonces.id})}" />
         </span>-->
 
-          </td>
+
 
 
       </tr>

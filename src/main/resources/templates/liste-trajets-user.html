@@ -52,9 +52,9 @@
 
 
 <td><span th:switch="${statusList[tempAnnoncesStat.index]}">
-                              <span th:case="1">AAccepté</span>
-                              <span th:case="2">RRefusé</span>
-                              <span th:case="3">Vous conduct</span>
+                              <span th:case="1"><a th:text="Details" th:href="@{/details(annonce_id=${tempAnnonces.id})}" /></span>
+                              <span th:case="2">Refusé</span>
+                              <span th:case="3"><a th:text="Details" th:href="@{/details(annonce_id=${tempAnnonces.id})}" /></span>
                               <span th:case="4">Demande envoyée</span>
                           </span>
 </td>
