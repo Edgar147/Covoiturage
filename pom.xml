@@ -8,10 +8,10 @@
 		<version>2.7.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.fittracker</groupId>
-	<artifactId>fittracker</artifactId>
+	<groupId>com.covoiturage</groupId>
+	<artifactId>covoiturage</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>fittracker</name>
+	<name>covoiturage</name>
 	<description>Sport application</description>
 	<properties>
 		<java.version>1.8</java.version>
@@ -70,7 +70,16 @@
     <artifactId>jaxb-api</artifactId>
     </dependency>
 
-		
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20210307</version>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.11.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

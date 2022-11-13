@@ -1,9 +1,12 @@
 package com.covoiturage.covoiturage.service;
 
+import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.covoiturage.covoiturage.repository.UserRepositoryImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,53 +18,87 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import com.covoiturage.covoiturage.dao.UserDAO;
 import com.covoiturage.covoiturage.entity.User;
 import com.covoiturage.covoiturage.entity.Role;
-import com.covoiturage.covoiturage.repository.UserRepository;
 
 @Service
 @Component("userService")
 public class UserServiceImpl implements Services<User> {
 
-	@Autowired
-	private UserDAO userDao;
+/*	@Autowired
+	private UserDAO userDao;*/
 
-	private UserRepository userRepository;
-
+	private UserRepositoryImpl userRepositoryImpl;
+private ServiceRestController serviceRestController=new ServiceRestController();
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
 	// VERY IMPORTANt!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	public UserServiceImpl(UserRepository ur) {
-		this.userRepository = ur;
+/*
+	public UserServiceImpl(UserRepositoryImpl ur) {
+		this.userRepositoryImpl = ur;
 	}
+*/
 
 	@Override
 	public User findById(int theId) {
-		User theUser = userRepository.findById(theId).get();
+		User theUser;
+
+
+		try {
+			theUser = serviceRestController.findByIdUser(theId);
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+
+
 		return theUser;
 	}
 
+
+	//??????????????????PAS UTILISE????????
 	@Override
 	public List<User> findAll() {
 
-		return userRepository.findAll();
+		try {
+			return serviceRestController.findAllUsers();
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
+
+	//§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 	@Override
 	public User findByUserName(String userName) {
-		return userDao.findByUserName(userName);
+		try {
+			return serviceRestController.findByFirstNameUser(userName);
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		User user = userDao.findByUserName(userName);
+		User user = null;
+		try {
+			user = serviceRestController.findByFirstNameUser(userName);
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
-		return new org.springframework.security.core.userdetails.User(user.getFirstName(), user.getPassword(),user.getAuthorities());	}
+		return new org.springframework.security.core.userdetails.User(user.getFirstName(), user.getPassword(),mapRolesToAuthorities(user.getRoles()));	}
 
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
 		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
@@ -71,7 +108,12 @@ public class UserServiceImpl implements Services<User> {
 	@Transactional
 	public void save(User theUser) {
 		theUser.setPassword(passwordEncoder.encode(theUser.getPassword()));
-		userDao.saveUser(theUser);
+
+		try {
+			serviceRestController.saveUser(theUser);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 
 	}
 

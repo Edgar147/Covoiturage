@@ -42,7 +42,6 @@ public class Trajet {
 	}
 
 	public Trajet(int userId, int annonceId , int conducteurId, int estAccepte) {
-		this.id = id;
 		this.userId = userId;
 		this.annonceId = annonceId;
 		this.estAccepte = estAccepte;

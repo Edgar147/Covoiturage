@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.covoiturage.covoiturage.dao.TrajetDAO;
 import com.covoiturage.covoiturage.entity.Annonce;
 import com.covoiturage.covoiturage.entity.Trajet;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.covoiturage.covoiturage.dao.UserDAO;
 import com.covoiturage.covoiturage.entity.User;
 import com.covoiturage.covoiturage.service.Services;
 
@@ -52,13 +49,17 @@ public class UserController {
 
 
 
+/*
 
 
 	@Autowired
 	private UserDAO ud;
+*/
 
+/*
 	@Autowired
 	private TrajetDAO td;
+*/
 
 	@GetMapping("/")
 	public String LoginPage() {
@@ -89,15 +90,19 @@ public class UserController {
 */
 		//logger.info("bbbbbbbbbbb"+parse.list().toString());
 		ObjectMapper mapper = new ObjectMapper();
-		List<Integer> list2 = Arrays.asList(mapper.readValue(EtudiantsAPI, Integer[].class));
-		logger.info("bbbbbbbbbbb2222222"+ list2.get(0));
+		List<Integer> listUsersAPI = Arrays.asList(mapper.readValue(EtudiantsAPI, Integer[].class));
+		logger.info("bbbbbbbbbbb2222222"+ listUsersAPI.get(0));
 
-
-		if (value != null) {
-			theUser.setPassword(value);
-		}
-		userService.save(theUser);
-		return "redirect:/registration-success";
+if(listUsersAPI.contains(theUser.getIne())) {
+	if (value != null) {
+		theUser.setPassword(value);
+	}
+	userService.save(theUser);
+	return "redirect:/registration-success";
+}
+else {
+	return "errorLogin";
+}
 	}
 
 
@@ -124,16 +129,15 @@ public class UserController {
 		int userId= user.getId();
 
 		theAnnonce.setUserId(userId);
-
-
-
-
-
 		annonceService.save(theAnnonce);
 
 
+		List<Annonce> theAnnonces=  annonceService.findAll();
+		int newId=theAnnonces.get(theAnnonces.size()-1).getId();
 
-		Trajet tr = new Trajet(userId, theAnnonce.getId(), userId, 3);
+		logger.info("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"+newId);
+
+		Trajet tr = new Trajet(userId, newId, userId, 3);
 		trajetService.save(tr);
 
 
@@ -177,6 +181,7 @@ public class UserController {
 		}
 		List<Integer> lastStatus= new ArrayList<>();
 		for (int i = 0; i < theAnnonces.size(); i++) {
+			logger.info("RRRRRRRRRRRRRRRRRRR"+theAnnonces.get(i).getDate());
 			boolean trouve=false;
 			for (int j = 0; j < annonceIds.size(); j++) {
 				if (theAnnonces.get(i).getId() ==annonceIds.get(j) && trouve==false){
@@ -303,7 +308,7 @@ public class UserController {
 				theUsersNomPrenom.add(userService.findById(theTrajets.get(i).getUserId()).getFirstName()+ " "+userService.findById(theTrajets.get(i).getUserId()).getLastName());
 				proposedUserId.add(theTrajets.get(i).getUserId());
 
-
+//ATTTTTTTTENTIIOOON, faut pas prendre conducteur
 				if (theTrajets.get(i).getEstAccepte()==1) {
 					reponseConducteur.add(1);
 				}

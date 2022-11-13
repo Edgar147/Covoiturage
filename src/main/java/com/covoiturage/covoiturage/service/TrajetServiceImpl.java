@@ -1,43 +1,54 @@
 package com.covoiturage.covoiturage.service;
 
-import com.covoiturage.covoiturage.dao.TrajetDAO;
 import com.covoiturage.covoiturage.entity.Trajet;
 import com.covoiturage.covoiturage.entity.User;
 import com.covoiturage.covoiturage.repository.TrajetRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Service
 @Component("trajetService")
 public class TrajetServiceImpl implements Services<Trajet> {
 
-	@Autowired
-	private TrajetDAO trajetDAO;
+/*	@Autowired
+	private TrajetDAO trajetDAO;*/
 
 	private TrajetRepository trajetRepository;
+	private ServiceRestController serviceRestController=new ServiceRestController();
 
 
 
 	// VERY IMPORTANt!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	public TrajetServiceImpl(TrajetRepository ar) {
-		this.trajetRepository = ar;
-	}
 
 	@Override
 	public Trajet findById(int theId) {
-		Trajet theTrajet = trajetRepository.findById(theId).get();
+		Trajet theTrajet = null;
+		try {
+			theTrajet = serviceRestController.findByIdTrajet(theId);
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 		return theTrajet;
 	}
 
 	@Override
 	public List<Trajet> findAll() {
 
-		return trajetRepository.findAll();
+		try {
+			return serviceRestController.findAllTrajets();
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -55,7 +66,11 @@ public class TrajetServiceImpl implements Services<Trajet> {
 	@Transactional
 	public void save(Trajet theTrajet) {
 
-		trajetDAO.saveTrajet(theTrajet);
+		try {
+			serviceRestController.saveTrajet(theTrajet);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 
 
 	}

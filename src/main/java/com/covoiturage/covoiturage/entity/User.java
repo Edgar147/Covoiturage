@@ -9,6 +9,7 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,8 @@ import com.covoiturage.covoiturage.entity.Role;
 
 @Entity
 @Table(name = "user")
-public class User implements UserDetails {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User /*implements UserDetails */{
 
 
 	@Id
@@ -31,6 +33,17 @@ public class User implements UserDetails {
 	@Column(name = "last_name")
 	private String lastName;
 
+	@Column(name = "ine")
+	private int ine;
+
+	public int getIne() {
+		return ine;
+	}
+
+	public void setIne(int ine) {
+		this.ine = ine;
+	}
+
 	@Column(name = "email")
 	private String email;
 
@@ -42,10 +55,11 @@ public class User implements UserDetails {
 	private String role;
 
 
-	public Collection<String> getRoles() {
-		Collection<String> c =new ArrayList<String>();
-	
-		c.add("USER");
+	public Collection<Role> getRoles() {
+		Collection<Role> c =new ArrayList<>();
+	Role role=new Role();
+	role.setName("ROLE_USER");
+		c.add(role);
 		return c;
 	}
 
@@ -142,15 +156,20 @@ public class User implements UserDetails {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
+		return "User{" +
+				"firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", ine=" + ine +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				'}';
 	}
+	
 
-
-
+/*
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -159,6 +178,7 @@ public class User implements UserDetails {
         authorities.add(new SimpleGrantedAuthority("USER"));
         return authorities;
 	}
+*/
 
 
 	public static String getEtudiantAPI(URL url) {
@@ -185,6 +205,7 @@ public class User implements UserDetails {
 
 
 
+/*
 
 
 
@@ -196,6 +217,7 @@ public class User implements UserDetails {
 
 
 
+*/
 
 
 
@@ -204,6 +226,7 @@ public class User implements UserDetails {
 
 
 
+/*
 
 
 	@Override
@@ -213,6 +236,8 @@ public class User implements UserDetails {
 	}
 
 
+*/
+/*
 
 
 
@@ -248,27 +273,11 @@ public class User implements UserDetails {
 		return false;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
-
-
-
+*/
 
 
 }

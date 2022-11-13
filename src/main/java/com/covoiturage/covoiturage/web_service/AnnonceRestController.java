@@ -1,4 +1,4 @@
-package com.covoiturage.covoiturage.rest;
+package com.covoiturage.covoiturage.web_service;
 
 import com.covoiturage.covoiturage.entity.Annonce;
 import com.covoiturage.covoiturage.service.AnnonceServiceImpl;
