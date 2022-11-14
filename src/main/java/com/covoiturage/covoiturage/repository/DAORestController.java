@@ -55,9 +55,6 @@ public class DAORestController {
 
 
 
-
-
-
     @GetMapping("/trajets")
     public List<Trajet> findAllTrajet() {
 

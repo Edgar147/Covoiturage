@@ -1,6 +1,7 @@
 package com.covoiturage.covoiturage.service;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +56,14 @@ private ServiceRestController serviceRestController=new ServiceRestController();
 
 
 		return theUser;
+	}
+
+
+	public  String encodeMDP(String mdp) {
+		String newMDP=passwordEncoder.encode(mdp);
+
+		return newMDP;
+
 	}
 
 

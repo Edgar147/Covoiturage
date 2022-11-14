@@ -31,35 +31,29 @@ import com.covoiturage.covoiturage.service.Services;
 @Controller
 public class UserController {
 	Logger logger = LoggerFactory.getLogger(UserController.class);
+	PresentationRestController presentation= new PresentationRestController();
 
+
+
+
+/*
 	@Autowired
 	@Qualifier("userService")
 	private Services<User> userService;
+*/
 
+/*
 	@Autowired
 	@Qualifier("annonceService")
 	private Services<Annonce> annonceService;
+*/
 
+/*
 	@Autowired
 	@Qualifier("trajetService")
 	private Services<Trajet> trajetService;
-
-
-
-
-
-
-/*
-
-
-	@Autowired
-	private UserDAO ud;
 */
 
-/*
-	@Autowired
-	private TrajetDAO td;
-*/
 
 	@GetMapping("/")
 	public String LoginPage() {
@@ -97,7 +91,7 @@ if(listUsersAPI.contains(theUser.getIne())) {
 	if (value != null) {
 		theUser.setPassword(value);
 	}
-	userService.save(theUser);
+	presentation.saveUser(theUser);
 	return "redirect:/registration-success";
 }
 else {
@@ -119,26 +113,26 @@ else {
 	}
 
 	@PostMapping("/saveAnnonce")
-	public String saveAnnonce(@ModelAttribute("annonce") Annonce theAnnonce) {
+	public String saveAnnonce(@ModelAttribute("annonce") Annonce theAnnonce) throws MalformedURLException, JsonProcessingException {
 
 
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String login = loggedInUser.getName();
-		User user = userService.findByUserName(login);
-
+		User user = presentation.findByFirstNameUser(login);
+//il faut que le findby... trouve le user et retourne en tant que user
 		int userId= user.getId();
 
 		theAnnonce.setUserId(userId);
-		annonceService.save(theAnnonce);
+		presentation.saveAnnonce(theAnnonce);
 
 
-		List<Annonce> theAnnonces=  annonceService.findAll();
+		List<Annonce> theAnnonces=  presentation.findAllAnnonces();
 		int newId=theAnnonces.get(theAnnonces.size()-1).getId();
 
 		logger.info("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"+newId);
 
 		Trajet tr = new Trajet(userId, newId, userId, 3);
-		trajetService.save(tr);
+		presentation.saveTrajet(tr);
 
 
 		return "redirect:/home";
@@ -146,17 +140,17 @@ else {
 
 
 	@GetMapping("/liste-annonce")
-	public String returnListOfAnnonces(Model theModel) {
+	public String returnListOfAnnonces(Model theModel) throws MalformedURLException, JsonProcessingException {
 
 
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String login = loggedInUser.getName();
-		User user = userService.findByUserName(login);
+		User user = presentation.findByFirstNameUser(login);
 		int userId= user.getId();
 
-		List<Trajet> trAll=  trajetService.findAll();
+		List<Trajet> trAll=  presentation.findAllTrajets();
 
-		List<Annonce> theAnnonces=  annonceService.findAll();
+		List<Annonce> theAnnonces=  presentation.findAllAnnonces();
 
 			List<Integer> annonceIds= new ArrayList<>();
 		List<Integer> lesStatus= new ArrayList<>();
@@ -207,24 +201,24 @@ else {
 	}
 
 	@GetMapping("/accepte-annonce")
-	public String AccepterAnnonce(@ModelAttribute("annonce_id") int annonce_id, Model theModel) {
+	public String AccepterAnnonce(@ModelAttribute("annonce_id") int annonce_id, Model theModel) throws MalformedURLException, JsonProcessingException {
 
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String login = loggedInUser.getName();
-		User user = userService.findByUserName(login);
+		User user = presentation.findByFirstNameUser(login);
 
 		int userId= user.getId();
 
-		Annonce theAnnonce = annonceService.findById(annonce_id);
+		Annonce theAnnonce = presentation.findByIdAnnonce(annonce_id);
 
 		if(theAnnonce.getUserId()==userId) {
 			Trajet tr = new Trajet(userId, annonce_id, theAnnonce.getUserId(),3 );
-			trajetService.save(tr);
+			presentation.saveTrajet(tr);
 
 		}
 		else {
 			Trajet tr = new Trajet(userId, annonce_id, theAnnonce.getUserId(),4);
-			trajetService.save(tr);
+			presentation.saveTrajet(tr);
 		}
 
 		return "redirect:/liste-annonce";
@@ -234,13 +228,13 @@ else {
 
 
 	@GetMapping("/liste-trajets-user")
-	public String returnListOfTrajets(Model theModel) {
+	public String returnListOfTrajets(Model theModel) throws MalformedURLException, JsonProcessingException {
 
-		List<Trajet> theTrajets = trajetService.findAll();
+		List<Trajet> theTrajets = presentation.findAllTrajets();
 
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String login = loggedInUser.getName();
-		User user = userService.findByUserName(login);
+		User user = presentation.findByFirstNameUser(login);
 
 		int userId= user.getId();
 
@@ -261,7 +255,7 @@ else {
 
 		for (int i = 0; i < theAnnoncesId.size(); i++) {
 
-			theAnnonces.add(annonceService.findById(theAnnoncesId.get(i)));
+			theAnnonces.add(presentation.findByIdAnnonce(theAnnoncesId.get(i)));
 
 		}
 
@@ -282,17 +276,17 @@ else {
 
 
 	@GetMapping("/liste-proposition")
-	public String returnListOfPropositions(Model theModel) {
+	public String returnListOfPropositions(Model theModel) throws MalformedURLException, JsonProcessingException {
 
 
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String login = loggedInUser.getName();
-		User user = userService.findByUserName(login);
+		User user = presentation.findByFirstNameUser(login);
 
 		int userId= user.getId();
 
 
-		List<Trajet> theTrajets = trajetService.findAll();
+		List<Trajet> theTrajets = presentation.findAllTrajets();
 
 
 
@@ -304,8 +298,8 @@ else {
 		for (int i = 0; i < theTrajets.size(); i++) {
 
 			if (theTrajets.get(i).getConducteurId() == userId) {
-				theAnnonces.add(annonceService.findById(theTrajets.get(i).getAnnonceId()));
-				theUsersNomPrenom.add(userService.findById(theTrajets.get(i).getUserId()).getFirstName()+ " "+userService.findById(theTrajets.get(i).getUserId()).getLastName());
+				theAnnonces.add(presentation.findByIdAnnonce(theTrajets.get(i).getAnnonceId()));
+				theUsersNomPrenom.add(presentation.findByIdUser(theTrajets.get(i).getUserId()).getFirstName()+ " "+presentation.findByIdUser(theTrajets.get(i).getUserId()).getLastName());
 				proposedUserId.add(theTrajets.get(i).getUserId());
 
 //ATTTTTTTTENTIIOOON, faut pas prendre conducteur
@@ -337,17 +331,17 @@ else {
 
 
 	@GetMapping("/accepte-proposition/{id1}/{id2}")
-	public String RefuserProposition(@ModelAttribute("id1") int userIdPropose,@ModelAttribute("id2") int annonceId, Model theModel) {
+	public String RefuserProposition(@ModelAttribute("id1") int userIdPropose,@ModelAttribute("id2") int annonceId, Model theModel) throws MalformedURLException, JsonProcessingException {
 
-		List<Trajet> theTrajets = trajetService.findAll();
+		List<Trajet> theTrajets = presentation.findAllTrajets();
 
 
 		for (int i = 0; i < theTrajets.size(); i++) {
 
 			if ((theTrajets.get(i).getAnnonceId() == annonceId)&&(theTrajets.get(i).getUserId()==userIdPropose)) {
-				Trajet trajetPropose=trajetService.findById(theTrajets.get(i).getId());
+				Trajet trajetPropose=presentation.findByIdTrajet(theTrajets.get(i).getId());
 				trajetPropose.setEstAccepte(1);
-				trajetService.save(trajetPropose);
+				presentation.saveTrajet(trajetPropose);
 
 
 			}
@@ -361,17 +355,17 @@ else {
 
 
 	@GetMapping("/refuse-proposition/{id1}/{id2}")
-	public String AccepterProposition(@ModelAttribute("id1") int userIdPropose,@ModelAttribute("id2") int annonceId, Model theModel) {
+	public String AccepterProposition(@ModelAttribute("id1") int userIdPropose,@ModelAttribute("id2") int annonceId, Model theModel) throws MalformedURLException, JsonProcessingException {
 
-		List<Trajet> theTrajets = trajetService.findAll();
+		List<Trajet> theTrajets = presentation.findAllTrajets();
 
 
 		for (int i = 0; i < theTrajets.size(); i++) {
 
 			if ((theTrajets.get(i).getAnnonceId() == annonceId)&&(theTrajets.get(i).getUserId()==userIdPropose)) {
-				Trajet trajetPropose=trajetService.findById(theTrajets.get(i).getId());
+				Trajet trajetPropose=presentation.findByIdTrajet(theTrajets.get(i).getId());
 				trajetPropose.setEstAccepte(2);
-				trajetService.save(trajetPropose);
+				presentation.saveTrajet(trajetPropose);
 
 
 			}
@@ -385,11 +379,11 @@ else {
 
 
 	@GetMapping("/details")
-	public String DetailsTrajet(@ModelAttribute("annonce_id") int annonceId, Model theModel) {
+	public String DetailsTrajet(@ModelAttribute("annonce_id") int annonceId, Model theModel) throws MalformedURLException, JsonProcessingException {
 
 		List<Integer> userIds= new ArrayList<>();
 
-		List<Trajet> theTrajets = trajetService.findAll();
+		List<Trajet> theTrajets = presentation.findAllTrajets();
 		List<User> userList =new ArrayList<>();
 
 		for (int i = 0; i < theTrajets.size(); i++) {
@@ -400,7 +394,7 @@ else {
 
 
 		for (int i = 0; i < userIds.size(); i++) {
-			userList.add(userService.findById(userIds.get(i)));
+			userList.add(presentation.findByIdUser(userIds.get(i)));
 		}
 		theModel.addAttribute("userList", userList);
 

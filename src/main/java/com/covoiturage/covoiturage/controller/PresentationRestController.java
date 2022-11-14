@@ -1,26 +1,21 @@
-package com.covoiturage.covoiturage.service;
+package com.covoiturage.covoiturage.controller;
 
-import com.covoiturage.covoiturage.controller.UserController;
 import com.covoiturage.covoiturage.entity.Annonce;
 import com.covoiturage.covoiturage.entity.Trajet;
 import com.covoiturage.covoiturage.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -33,24 +28,15 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/services")
+@RequestMapping("/present")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ServiceRestController {
+public class PresentationRestController {
+
+
+
+
+
     Logger logger = LoggerFactory.getLogger(UserController.class);
-
-    @Autowired
-    @Qualifier("userService")
-    private Services<User> userService;
-
-
-    @Autowired
-    @Qualifier("annonceService")
-    private Services<Annonce> annonceService;
-
-    @Autowired
-    @Qualifier("trajetService")
-    private Services<Trajet> trajetService;
-
 
     public static String getApi(URL url) {
         try (InputStream input = url.openStream()) {
@@ -70,7 +56,7 @@ public class ServiceRestController {
     @GetMapping("/users")
     public List<User> findAllUsers() throws MalformedURLException, JsonProcessingException {
 
-        URL url=new URL("http://localhost:8090/dao/users");
+        URL url=new URL("http://localhost:8090/services/users");
         String usersAPI=this.getApi(url);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -83,7 +69,7 @@ public class ServiceRestController {
 
     @GetMapping("/user")
     public User findByIdUser(int id) throws MalformedURLException, JsonProcessingException {
-        URL url=new URL("http://localhost:8090/dao/user/"+id);
+        URL url=new URL("http://localhost:8090/services/userPost/"+id);
         String usersAPI=this.getApi(url);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -97,7 +83,7 @@ public class ServiceRestController {
 
     @GetMapping("/userByName")
     public User findByFirstNameUser(String name) throws MalformedURLException, JsonProcessingException {
-        URL url=new URL("http://localhost:8090/dao/userName/"+name);
+        URL url=new URL("http://localhost:8090/services/userByNamePost/"+name);
         String usersAPI=this.getApi(url);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -109,7 +95,7 @@ public class ServiceRestController {
     }
 
     @GetMapping(value = "/saveUser", produces = "application/json")
-    public User saveUser(User user) throws JsonProcessingException {
+    public void saveUser(User user) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -121,7 +107,7 @@ public class ServiceRestController {
         personJsonObject.put("email",user.getEmail());
         personJsonObject.put("password",user.getPassword());
 
-        String createPersonUrl = "http://localhost:8090/dao/saveUser";
+        String createPersonUrl = "http://localhost:8090/services/saveUserPost";
 
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -137,7 +123,9 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
 
 
+/*
         return user;
+*/
 
 
     }
@@ -147,7 +135,7 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
     @GetMapping("/trajets")
     public List<Trajet> findAllTrajets() throws MalformedURLException, JsonProcessingException {
 
-        URL url=new URL("http://localhost:8090/dao/trajets");
+        URL url=new URL("http://localhost:8090/services/trajets");
         String usersAPI=this.getApi(url);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -160,7 +148,7 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
     @GetMapping("/trajet")
     public Trajet findByIdTrajet(int id) throws MalformedURLException, JsonProcessingException {
-        URL url=new URL("http://localhost:8090/dao/trajet/"+id);
+        URL url=new URL("http://localhost:8090/services/trajetPost/"+id);
         String trajetAPI=this.getApi(url);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -184,7 +172,7 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
         personJsonObject.put("estAccepte",trajet.getEstAccepte());
         personJsonObject.put("conducteurId",trajet.getConducteurId());
 
-        String createPersonUrl = "http://localhost:8090/dao/saveTrajet";
+        String createPersonUrl = "http://localhost:8090/services/saveTrajetPost";
 
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -214,7 +202,7 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
     @GetMapping("/annonces")
     public List<Annonce> findAllAnnonces() throws MalformedURLException, JsonProcessingException {
 
-        URL url=new URL("http://localhost:8090/dao/annonces");
+        URL url=new URL("http://localhost:8090/services/annonces");
         String usersAPI=this.getApi(url);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -228,7 +216,7 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
     @GetMapping("/annonce")
     public Annonce findByIdAnnonce(int id) throws MalformedURLException, JsonProcessingException {
-        URL url=new URL("http://localhost:8090/dao/annonce/"+id);
+        URL url=new URL("http://localhost:8090/services/annoncePost/"+id);
         String annonceAPI=this.getApi(url);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -255,7 +243,7 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
         personJsonObject.put("depart",annonce.getDepart());
         personJsonObject.put("arrive",annonce.getArrive());
 
-        String createPersonUrl = "http://localhost:8090/dao/saveAnnonce";
+        String createPersonUrl = "http://localhost:8090/services/saveAnnoncePost";
 
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -277,86 +265,6 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
     }
 
-
-
-    @PostMapping(value = "/saveUserPost", produces = "application/json")
-    public void saveUserPost(@RequestBody User user) {
-        userService.save(user);
-    }
-
-
-
-    @PostMapping(value = "/saveTrajetPost", produces = "application/json")
-    public void saveTrajetPost(@RequestBody Trajet trajet) {
-        trajetService.save(trajet);
-    }
-
-
-
-    @PostMapping(value = "/saveAnnoncePost", produces = "application/json")
-    public void saveAnnoncePost(@RequestBody Annonce annonce) {
-        annonceService.save(annonce);
-    }
-
-
-
-/*
-
-    @GetMapping(value = "/nameByUser", consumes = "application/json", produces = "application/json")
-    public User saveUser( User user) {
-
-
-    }
-*/
-@GetMapping("/userByNamePost/{name}")
-public User findByFirstNameUserPost(@ModelAttribute("name") String name) throws MalformedURLException, JsonProcessingException {
-    URL url=new URL("http://localhost:8090/dao/userName/"+name);
-    String usersAPI=this.getApi(url);
-
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
-
-    User UsersAPI = mapper.readValue(usersAPI, User.class);
-    logger.info("xxxxxxxxxxxxxxxx"+UsersAPI.getFirstName());
-    return UsersAPI;
-}
-
-
-    @GetMapping("/userPost/{id}")
-    public User findByIdUserPostId(@ModelAttribute("id") int id) throws MalformedURLException, JsonProcessingException {
-        URL url=new URL("http://localhost:8090/dao/user/"+id);
-        String usersAPI=this.getApi(url);
-
-        ObjectMapper mapper = new ObjectMapper();
-        User UsersAPI = mapper.readValue(usersAPI, User.class);
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
-        return UsersAPI;
-    }
-
-
-    @GetMapping("/trajetPost/{id}")
-    public Trajet findByTrajetPostId(@ModelAttribute("id") int id) throws MalformedURLException, JsonProcessingException {
-        URL url=new URL("http://localhost:8090/dao/trajet/"+id);
-        String usersAPI=this.getApi(url);
-
-        ObjectMapper mapper = new ObjectMapper();
-        Trajet UsersAPI = mapper.readValue(usersAPI, Trajet.class);
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
-        return UsersAPI;
-    }
-
-    @GetMapping("/annoncePost/{id}")
-    public Annonce findByAnnoncePostId(@ModelAttribute("id") int id) throws MalformedURLException, JsonProcessingException {
-        URL url=new URL("http://localhost:8090/dao/annonce/"+id);
-        String usersAPI=this.getApi(url);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
-
-        Annonce UsersAPI = mapper.readValue(usersAPI, Annonce.class);
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
-        return UsersAPI;
-    }
 
 
 
