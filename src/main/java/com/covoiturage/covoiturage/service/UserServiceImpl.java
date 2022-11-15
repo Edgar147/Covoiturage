@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.covoiturage.covoiturage.repository.UserRepositoryImpl;
+import com.covoiturage.covoiturage.web_service.API_EXT_INE;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +26,7 @@ import com.covoiturage.covoiturage.entity.Role;
 @Service
 @Component("userService")
 public class UserServiceImpl implements Services<User> {
+	API_EXT_INE api_exterieure=new API_EXT_INE();
 
 /*	@Autowired
 	private UserDAO userDao;*/
@@ -119,8 +121,19 @@ private ServiceRestController serviceRestController=new ServiceRestController();
 		theUser.setPassword(passwordEncoder.encode(theUser.getPassword()));
 
 		try {
-			serviceRestController.saveUser(theUser);
+
+			if(api_exterieure.getListUsersAPI().contains(theUser.getIne())) {
+				serviceRestController.saveUser(theUser);
+			}
+			else{
+
+				serviceRestController.ErrorPage();
+			}
+
+
 		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
 

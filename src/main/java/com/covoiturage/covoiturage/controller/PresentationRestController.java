@@ -3,20 +3,25 @@ package com.covoiturage.covoiturage.controller;
 import com.covoiturage.covoiturage.entity.Annonce;
 import com.covoiturage.covoiturage.entity.Trajet;
 import com.covoiturage.covoiturage.entity.User;
+import com.covoiturage.covoiturage.service.Services;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,19 +29,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/present")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PresentationRestController {
 
+@Autowired
 
-
-
-
+    @Qualifier("cont")
+    private UserController cont;
     Logger logger = LoggerFactory.getLogger(UserController.class);
+
+
+
+    static int errorLoginv=0;
+
 
     public static String getApi(URL url) {
         try (InputStream input = url.openStream()) {
@@ -95,7 +104,11 @@ public class PresentationRestController {
     }
 
     @GetMapping(value = "/saveUser", produces = "application/json")
-    public void saveUser(User user) throws JsonProcessingException {
+    public void saveUser(User user,String value) throws JsonProcessingException {
+        if (value != null) {
+            user.setPassword(value);
+        }
+
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -116,17 +129,6 @@ public class PresentationRestController {
                 new HttpEntity<String>(personJsonObject.toString(), headers);
         String personResultAsJsonStr =
                 restTemplate.postForObject(createPersonUrl, request, String.class);//C'est ça qui post
-/*
-        JsonNode root = objectMapper.readTree(personResultAsJsonStr);
-*//*
-logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
-
-
-
-/*
-        return user;
-*/
-
 
     }
 
@@ -228,9 +230,233 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
     }
 
 
+    public int getCurrentUserId() throws MalformedURLException, JsonProcessingException {
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        String login = loggedInUser.getName();
+        User user = this.findByFirstNameUser(login);
+        return  user.getId();
+    }
+    public int lastAnnonceId() throws MalformedURLException, JsonProcessingException {
+        List<Annonce> theAnnonces=  this.findAllAnnonces();
 
-    @GetMapping(value = "/saveAnnonce", produces = "application/json")
-    public Annonce saveAnnonce(Annonce annonce) throws JsonProcessingException {
+        int newId=theAnnonces.get(theAnnonces.size()-1).getId();
+        return newId;
+    }
+
+
+    public Trajet createTrajet(int userId,int newId,int userId2,int status){
+        Trajet tr = new Trajet(userId, newId, userId2, status);
+        return  tr;
+    }
+
+
+    public void listeAnnonceAffichage(List<Annonce> theAnnonces,List<Integer> lastStatus) throws MalformedURLException, JsonProcessingException {
+
+        List<Trajet> trAll=  this.findAllTrajets();
+
+
+        List<Integer> annonceIds= new ArrayList<>();
+        List<Integer> lesStatus= new ArrayList<>();
+
+
+
+
+        for (int i = 0; i < trAll.size(); i++) {
+
+            //si utilisateur a choisi cette annonec
+            if(trAll.get(i).getUserId()==this.getCurrentUserId()){
+                annonceIds.add(trAll.get(i).getAnnonceId());
+                lesStatus.add(trAll.get(i).getEstAccepte());
+                //0-> rien, 1->accepté, 2-> refusé, 3->vous êtes le conducteur 4-> demande envoyée
+            }
+            else {
+                annonceIds.add(-1);
+                lesStatus.add(0);
+            }
+
+
+        }
+        for (int i = 0; i < theAnnonces.size(); i++) {
+            logger.info("RRRRRRRRRRRRRRRRRRR"+theAnnonces.get(i).getDate());
+            boolean trouve=false;
+            for (int j = 0; j < annonceIds.size(); j++) {
+                if (theAnnonces.get(i).getId() ==annonceIds.get(j) && trouve==false){
+                    lastStatus.add(lesStatus.get(j));
+                    trouve=true;
+                }
+
+            }
+            if(trouve==false){
+                lastStatus.add(0);
+
+            }
+        }
+
+    }
+
+
+    public void accepteAnnonce(int annonce_id) throws MalformedURLException, JsonProcessingException {
+        Annonce theAnnonce = this.findByIdAnnonce(annonce_id);
+
+        int userId= this.getCurrentUserId();
+
+        if(theAnnonce.getUserId()==userId) {
+
+            this.saveTrajet(this.createTrajet(userId,annonce_id,theAnnonce.getUserId(),3));
+
+        }
+        else {
+            Trajet tr=new Trajet();
+            this.saveTrajet( this.createTrajet(userId,annonce_id,theAnnonce.getUserId(),4));
+        }
+
+    }
+
+
+
+public void ListeDesTrajets(List<Annonce> theAnnonces,List<Integer> lesStatus) throws MalformedURLException, JsonProcessingException {
+
+
+
+    List<Trajet> theTrajets = this.findAllTrajets();
+
+
+    int userId= this.getCurrentUserId();
+
+
+
+    List<Integer> theAnnoncesId = new ArrayList<>();
+
+    for (int i = 0; i < theTrajets.size(); i++) {
+
+        if (theTrajets.get(i).getUserId() == userId) {
+            theAnnoncesId.add(theTrajets.get(i).getAnnonceId());
+            lesStatus.add(theTrajets.get(i).getEstAccepte());
+        }
+    }
+
+    for (int i = 0; i < theAnnoncesId.size(); i++) {
+
+        theAnnonces.add(this.findByIdAnnonce(theAnnoncesId.get(i)));
+
+    }
+
+}
+
+    List<Annonce> theAnnonces = new ArrayList<>();
+    List<String> theUsersNomPrenom = new ArrayList<>();
+    List<Integer> proposedUserId = new ArrayList<>();
+    List<Integer> reponseConducteur = new ArrayList<>();
+
+public void listeDesPropositions( List<Annonce> theAnnonces,List<String> theUsersNomPrenom,List<Integer> proposedUserId,List<Integer> reponseConducteur) throws MalformedURLException, JsonProcessingException {
+
+    List<Trajet> theTrajets = this.findAllTrajets();
+
+
+
+    int userId= this.getCurrentUserId();
+
+
+
+    for (int i = 0; i < theTrajets.size(); i++) {
+
+        if (theTrajets.get(i).getConducteurId() == userId) {
+            theAnnonces.add(this.findByIdAnnonce(theTrajets.get(i).getAnnonceId()));
+            theUsersNomPrenom.add(this.findByIdUser(theTrajets.get(i).getUserId()).getFirstName()+ " "+this.findByIdUser(theTrajets.get(i).getUserId()).getLastName());
+            proposedUserId.add(theTrajets.get(i).getUserId());
+
+//ATTTTTTTTENTIIOOON, faut pas prendre conducteur
+            if (theTrajets.get(i).getEstAccepte()==1) {
+                reponseConducteur.add(1);
+            }
+            else if (theTrajets.get(i).getEstAccepte()==2){
+                reponseConducteur.add(2);
+            }
+            else if (theTrajets.get(i).getEstAccepte()==3){
+                reponseConducteur.add(3);
+            }
+            else {
+                reponseConducteur.add(0);
+            }
+
+        }
+    }
+
+
+
+
+
+}
+
+
+
+public void accepteProposition(int userIdPropose, int annonceId) throws MalformedURLException, JsonProcessingException {
+    List<Trajet> theTrajets = this.findAllTrajets();
+
+
+    for (int i = 0; i < theTrajets.size(); i++) {
+
+        if ((theTrajets.get(i).getAnnonceId() == annonceId)&&(theTrajets.get(i).getUserId()==userIdPropose)) {
+            Trajet trajetPropose=this.findByIdTrajet(theTrajets.get(i).getId());
+            trajetPropose.setEstAccepte(1);
+            this.saveTrajet(trajetPropose);
+
+
+        }
+    }
+}
+
+
+    public void refuseProposition(int userIdPropose, int annonceId) throws MalformedURLException, JsonProcessingException {
+        List<Trajet> theTrajets = this.findAllTrajets();
+
+
+        for (int i = 0; i < theTrajets.size(); i++) {
+
+            if ((theTrajets.get(i).getAnnonceId() == annonceId)&&(theTrajets.get(i).getUserId()==userIdPropose)) {
+                Trajet trajetPropose=this.findByIdTrajet(theTrajets.get(i).getId());
+                trajetPropose.setEstAccepte(2);
+                this.saveTrajet(trajetPropose);
+
+
+            }
+        }
+    }
+
+
+
+
+    public void details(List<User> userList,int annonceId) throws MalformedURLException, JsonProcessingException {
+        List<Integer> userIds= new ArrayList<>();
+
+        List<Trajet> theTrajets = this.findAllTrajets();
+
+
+        for (int i = 0; i < theTrajets.size(); i++) {
+            if((theTrajets.get(i).getAnnonceId()==annonceId)&&(theTrajets.get(i).getEstAccepte() !=0)&&(theTrajets.get(i).getEstAccepte() !=2)&&(theTrajets.get(i).getEstAccepte() !=4)){
+                userIds.add(theTrajets.get(i).getUserId());
+            }
+        }
+
+
+        for (int i = 0; i < userIds.size(); i++) {
+            userList.add(this.findByIdUser(userIds.get(i)));
+        }
+    }
+
+
+
+        @GetMapping(value = "/saveAnnonce", produces = "application/json")
+    public Annonce saveAnnonce(Annonce annonce) throws JsonProcessingException, MalformedURLException {
+
+
+        int userId= this.getCurrentUserId();
+
+        annonce.setUserId(userId);
+
+
+
+
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -267,9 +493,37 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
 
 
+/*
+    @GetMapping("/errorLogin")
+    public ModelAndView ErrorPage(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("errorLogin");
 
+        return modelAndView;
+    }
+*/
 
+/*
+    @GetMapping("/successLogin")
+    public ModelAndView SuccessPage(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("registration-success");
 
+        return modelAndView;
+    }
+*/
+    @PostMapping(value = "/errorLogin", consumes = "application/json")
+    public void errorLogin(@RequestBody String response) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        Map<String,Integer> participantJsonList = mapper.readValue(response,  HashMap.class);
+        errorLoginv=1;
+
+        logger.info("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"+participantJsonList.get("error"));
+/*
+        return participantJsonList.get("error");
+*/
+    }
 
 
 

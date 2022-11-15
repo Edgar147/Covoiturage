@@ -281,6 +281,7 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
     @PostMapping(value = "/saveUserPost", produces = "application/json")
     public void saveUserPost(@RequestBody User user) {
+
         userService.save(user);
     }
 
@@ -359,8 +360,37 @@ public User findByFirstNameUserPost(@ModelAttribute("name") String name) throws 
     }
 
 
+    @GetMapping(value = "/sendError", produces = "application/json")
+    public void ErrorPage() throws MalformedURLException, JsonProcessingException {
+/*        URL url=new URL("http://localhost:8090/present/errorLogin");
+
+        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
+        return "redirect:http://localhost:8090/present/errorLogin";*/
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        JSONObject personJsonObject = new JSONObject();
+
+        personJsonObject.put("error",1);
+
+        String createPersonUrl = "http://localhost:8090/present/errorLogin";
 
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();// Pour que jackson comprends le LocalDateTime
+
+        HttpEntity<String> request =
+                new HttpEntity<String>(personJsonObject.toString(), headers);
+        String personResultAsJsonStr =
+                restTemplate.postForObject(createPersonUrl, request, String.class);//C'est ça qui post
+
+
+
+
+
+
+    }
 
 
 
