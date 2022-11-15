@@ -86,6 +86,7 @@ private ServiceRestController serviceRestController=new ServiceRestController();
 	//§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 	@Override
 	public User findByUserName(String userName) {
+
 		try {
 			return serviceRestController.findByFirstNameUser(userName);
 		} catch (MalformedURLException e) {
@@ -99,6 +100,17 @@ private ServiceRestController serviceRestController=new ServiceRestController();
 	@Transactional
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		User user = null;
+
+
+		try {
+			api_exterieure.distance("Nancy","Metz");
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+
+
 		try {
 			user = serviceRestController.findByFirstNameUser(userName);
 		} catch (MalformedURLException e) {
