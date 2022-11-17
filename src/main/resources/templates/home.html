@@ -7,7 +7,30 @@
 
 	<title>Home</title>
 </head>
-<body>
+<body style="background-image: url('images/backgr.jpg'); background-size: cover">
+<div class="container py-5 bg-light  " style=" opacity: 0.9;margin-top:150px; z-index:1;">
+
+	<div class="form-outline mb-3" style="opacity: 1 !important;;   z-index:1000; display: inline-block; margin-left: 42%;">
+		<div class=" btn-group-vertical">
+
+
+		<a href="/creer-annonce" type="button" class="btn btn-primary btn-lg">Add Annonce</a>
+		<a style="margin-top:20px;" href="/liste-annonce" type="button" class="btn btn-success btn-lg">Voir les annonces</a>
+		<a style="margin-top:20px;" href="/liste-trajets-user" type="button" class="btn btn-warning btn-lg">Voir mes trajets</a>
+		<a style="margin-top:20px;" href="/liste-proposition" type="button" class="btn btn-info btn-lg">Propositions</a>
+
+		</div>
+		<form th:action="@{/logout}" method="POST">
+			<input style="margin-top:30px; margin-left: 26%;" type="submit"  value="Logout" class="btn btn-danger btn-lg"></input>
+		</form>
+	</div>
+</div>
+
+
+
+<!--
+
+
 	HOMEPAGE.......
 	<a  href="/creer-annonce">Add Annonce</a>
 	<a  href="/liste-annonce">Voir les annonces</a>
@@ -19,6 +42,7 @@
 		<input type="submit" value="Logout" />
 
 
+-->
 
 
 
