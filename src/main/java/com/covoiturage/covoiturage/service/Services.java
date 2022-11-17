@@ -14,7 +14,6 @@ public interface Services<T> extends UserDetailsService {
 
 	public T findById(int theId);
 
-	// public String findNameById(int theId);
 
 	public List<T> findAll();
 

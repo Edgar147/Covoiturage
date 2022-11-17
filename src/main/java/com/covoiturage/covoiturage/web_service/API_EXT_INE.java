@@ -3,11 +3,9 @@ package com.covoiturage.covoiturage.web_service;
 import com.covoiturage.covoiturage.controller.UserController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -56,13 +54,7 @@ public class API_EXT_INE {
 
         Map<String, ArrayList<Map<String,Double>>>  map = new ObjectMapper().readValue(reponse, HashMap.class);
 
-/*logger.error("APIAPIAPIAPIAPIAPIAPIAPIAPI_latitude1="+map.get("stops").get(0).get("latitude"));
-logger.error("APIAPIAPIAPIAPIAPIAPIAPIAPI_longitude1="+map.get("stops").get(0).get("longitude"));
-logger.error("APIAPIAPIAPIAPIAPIAPIAPIAPI_latitude2="+map.get("stops").get(1).get("latitude"));
-logger.error("APIAPIAPIAPIAPIAPIAPIAPIAPI_longitude2="+map.get("stops").get(1).get("longitude"));*/
 
-       /* this.duree(map.get("stops").get(0).get("latitude"),map.get("stops").get(0).get("longitude"),
-                map.get("stops").get(1).get("longitude"),map.get("stops").get(1).get("longitude"));*/
         double latutude1=map.get("stops").get(0).get("latitude");
         double longitude1=map.get("stops").get(0).get("longitude");
         double latutude2=map.get("stops").get(1).get("latitude");
@@ -79,7 +71,6 @@ logger.error("APIAPIAPIAPIAPIAPIAPIAPIAPI_longitude2="+map.get("stops").get(1).g
         return coords;
 
 
-        //return (int) map.get("distance");
     }
 
 
@@ -94,9 +85,7 @@ logger.error("APIAPIAPIAPIAPIAPIAPIAPIAPI_longitude2="+map.get("stops").get(1).g
         headers.add("Authorization","prj_live_pk_a3274ce3fa36801a7bda77159ad771de9536cd0a");
         //personJsonObject.put("userId",annonce.getUserId());
 
-/*
-        String createPersonUrl = "https://api.radar.io/v1/route/matrix?origins="+latitude1+","+longitude1+"&destinations="+latitude2+","+longitude2+"&mode=car&units=imperial";
-*/
+
         String createPersonUrl = "https://api.radar.io/v1/route/matrix?origins="+latitude1+","+longitude1+"&destinations="+latitude2+","+longitude2+"&mode=car&units=metric";
 
 
@@ -106,24 +95,12 @@ logger.error("APIAPIAPIAPIAPIAPIAPIAPIAPI_longitude2="+map.get("stops").get(1).g
 
 
         ResponseEntity<HashMap> result = restTemplate.exchange(createPersonUrl, HttpMethod.GET, request, HashMap.class);
-        logger.error("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR="+result.getBody());
 
         Map<String,ArrayList<ArrayList<Map<String,Map<String,String>>>>> list2=result.getBody();
 
-        logger.error("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE="+list2.get("matrix").get(0).get(0).get("duration").get("text"));
 
         String duree=list2.get("matrix").get(0).get(0).get("duration").get("text");
         return  duree;
-
-        //        Map<String,ArrayList<ArrayList<Map<String,Map<String,String>>>>>
-
-      /*  Map<String, Map<String,Integer>>  map2 = new ObjectMapper().readValue(personResultAsJsonStr, HashMap.class);
-
-        logger.error("Asdgrsgrrsehgsrhsrhsrsdrg="+map2.get("meta").get("code"));*/
-
-       // return result;
-
-
 
 
     }
@@ -139,5 +116,5 @@ logger.error("APIAPIAPIAPIAPIAPIAPIAPIAPI_longitude2="+map.get("stops").get(1).g
 //AIzaSyBN4_F3cBbadQ4x1PqZf6_OCktum1dmkJg
 //https://fr.distance24.org/route.json?stops=Metz|Villerupt
 
-//
+
 

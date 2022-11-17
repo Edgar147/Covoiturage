@@ -10,11 +10,6 @@ import java.util.*;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.covoiturage.covoiturage.entity.Role;
 
 
 @Entity
@@ -62,25 +57,6 @@ public class User /*implements UserDetails */{
 		c.add(role);
 		return c;
 	}
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-
-
-
-
-
-
 
 
 

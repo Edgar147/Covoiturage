@@ -23,29 +23,31 @@ public class WebServiceRestController {
 
     API_EXT_INE apiMethod=new API_EXT_INE();
 
+
 /*
 
-    @GetMapping("/users")
-    public List<User> findAll() {
+    @PostMapping(value = "/estPresent", consumes = "application/json", produces = "application/json")
+    public String getEstPresentListe(@RequestBody String numero) throws JsonProcessingException, MalformedURLException {
+        ObjectMapper mapper = new ObjectMapper();
 
-        return userRepositoryImpl.findAll();
-    }
+        Map<String,Integer> map = mapper.readValue(numero,  HashMap.class);
+        int num=map.get("numero");
+        List<Integer> liste=apiMethod.getListUsersAPI();
+        JSONObject coordJson = new JSONObject();
+
+        if(!liste.contains(num)){
+
+        repJson.put("test",0);
+
+            return  repJson.toString();
+        }
+        repJson.put("test",1);
+
+        return  repJson.toString();
 
 
+    }*/
 
-    @GetMapping("/user/{id}")
-    public User findByIdUser(@ModelAttribute("id") int id) {
-        User user = userRepositoryImpl.findById(id).get();
-        return user;
-    }
-
-
-    @GetMapping("/userName/{firstname}")
-    public User findByFirstName(@ModelAttribute("firstname") String firstname) {
-        User user = userRepositoryImpl.findByFirstName(firstname);
-        return user;
-    }
-*/
 
 
 
@@ -98,17 +100,7 @@ return coordJson.toString();
         return dureeJson.toString();
 
 
-
     }
-
-
-
-
-
-
-
-
-
 
 
 

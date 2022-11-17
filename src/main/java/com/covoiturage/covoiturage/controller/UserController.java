@@ -1,9 +1,7 @@
 package com.covoiturage.covoiturage.controller;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.covoiturage.covoiturage.entity.Annonce;

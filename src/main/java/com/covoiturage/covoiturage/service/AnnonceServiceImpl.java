@@ -2,7 +2,6 @@ package com.covoiturage.covoiturage.service;
 
 import com.covoiturage.covoiturage.entity.Annonce;
 import com.covoiturage.covoiturage.entity.User;
-import com.covoiturage.covoiturage.repository.AnnonceRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,11 +29,6 @@ public class AnnonceServiceImpl implements Services<Annonce> {
 	private ServiceRestController serviceRestController=new ServiceRestController();
 
 
-
-/*	// VERY IMPORTANt!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	public AnnonceServiceImpl(AnnonceRepository ar) {
-		this.annonceRepository = ar;
-	}*/
 
 	@Override
 	public Annonce findById(int theId) {

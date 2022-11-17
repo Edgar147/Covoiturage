@@ -36,12 +36,7 @@ private ServiceRestController serviceRestController=new ServiceRestController();
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
-	// VERY IMPORTANt!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-/*
-	public UserServiceImpl(UserRepositoryImpl ur) {
-		this.userRepositoryImpl = ur;
-	}
-*/
+
 
 	@Override
 	public User findById(int theId) {
@@ -69,7 +64,6 @@ private ServiceRestController serviceRestController=new ServiceRestController();
 	}
 
 
-	//??????????????????PAS UTILISE????????
 	@Override
 	public List<User> findAll() {
 
@@ -83,7 +77,7 @@ private ServiceRestController serviceRestController=new ServiceRestController();
 	}
 
 
-	//§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
+
 	@Override
 	public User findByUserName(String userName) {
 
@@ -101,14 +95,7 @@ private ServiceRestController serviceRestController=new ServiceRestController();
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		User user = null;
 
-/*
-		try {
-			api_exterieure.distance("Nancy","Metz");
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}*/
+
 
 
 		try {

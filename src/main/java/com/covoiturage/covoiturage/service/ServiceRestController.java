@@ -8,9 +8,7 @@ import com.covoiturage.covoiturage.web_service.API_EXT_INE;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -79,7 +76,6 @@ public class ServiceRestController {
 
         ObjectMapper mapper = new ObjectMapper();
         List<User> listUsersAPI = Arrays.asList(mapper.readValue(usersAPI, User[].class));
-//logger.info("xxxxxxxxxxxxxxxxxxxxx"+listUsersAPI.get(0).getFirstName());
 
         return listUsersAPI;
     }
@@ -92,7 +88,6 @@ public class ServiceRestController {
 
         ObjectMapper mapper = new ObjectMapper();
         User UsersAPI = mapper.readValue(usersAPI, User.class);
-       // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
         return UsersAPI;
     }
 
@@ -134,11 +129,6 @@ public class ServiceRestController {
                 new HttpEntity<String>(personJsonObject.toString(), headers);
         String personResultAsJsonStr =
                 restTemplate.postForObject(createPersonUrl, request, String.class);//C'est ça qui post
-/*
-        JsonNode root = objectMapper.readTree(personResultAsJsonStr);
-*//*
-logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
-
 
 
         return user;
@@ -157,7 +147,6 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
         ObjectMapper mapper = new ObjectMapper();
         List<Trajet> listTrajetsAPI = Arrays.asList(mapper.readValue(usersAPI, Trajet[].class));
-//logger.info("xxxxxxxxxxxxxxxxxxxxx"+listUsersAPI.get(0).getFirstName());
 
         return listTrajetsAPI;
     }
@@ -170,7 +159,6 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
         ObjectMapper mapper = new ObjectMapper();
         Trajet trajet = mapper.readValue(trajetAPI, Trajet.class);
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
         return trajet;
     }
 
@@ -198,10 +186,6 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
                 new HttpEntity<String>(personJsonObject.toString(), headers);
         String personResultAsJsonStr =
                 restTemplate.postForObject(createPersonUrl, request, String.class);//C'est ça qui post
-/*
-        JsonNode root = objectMapper.readTree(personResultAsJsonStr);
-*//*
-logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
 
 
@@ -226,7 +210,6 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
         mapper.findAndRegisterModules();// Pour que jackson comprends le LocalDateTime
 
         List<Annonce> listAnnoncesAPI = Arrays.asList(mapper.readValue(usersAPI, Annonce[].class));
-//logger.info("xxxxxxxxxxxxxxxxxxxxx"+listUsersAPI.get(0).getFirstName());
 
         return listAnnoncesAPI;
     }
@@ -240,7 +223,6 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
         mapper.findAndRegisterModules();// Pour que jackson comprends le LocalDateTime
 
         Annonce annonce = mapper.readValue(annonceAPI, Annonce.class);
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
         return annonce;
     }
 
@@ -264,7 +246,6 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
                 new HttpEntity<String>(coordJsonObject.toString(), headersCoord);
         Map<String,Double> listCoord =  restTemplateCoord.postForObject(createCoordUrl, requestCoord, HashMap.class);//C'est ça qui post
 
-        //logger.info("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"+coordResultAsJsonStr);
         double latitude1= listCoord.get("latitude1");
         double longitude1= listCoord.get("longitude1");
         double latitude2= listCoord.get("latitude2");
@@ -287,19 +268,12 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
         personJsonObject.put("arrive",annonce.getArrive());
         personJsonObject.put("commentaire",annonce.getCommentaire());
 
-/*        List<Double> list=api_exterieure.coordinateAPI(annonce.getDepart(),annonce.getArrive());
 
-        double latitude1= list.get(0);
-        double longitude1= list.get(1);
-        double latitude2= list.get(2);
-        double longitude2= list.get(3);*/
         annonce.setLatitude1(latitude1);
         annonce.setLongitude1(longitude1);
         annonce.setLatitude2(latitude2);
         annonce.setLongitude2(longitude2);
-        //String duree=api_exterieure.duree(latitude1,longitude1,latitude2,longitude2);
 
-//annonce.setDuree(duree);
 
 
 
@@ -354,11 +328,6 @@ annonce.setDuree(duree);
                 new HttpEntity<String>(personJsonObject.toString(), headers);
         String personResultAsJsonStr =
                 restTemplate.postForObject(createPersonUrl, request, String.class);//C'est ça qui post
-/*
-        JsonNode root = objectMapper.readTree(personResultAsJsonStr);
-*//*
-logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
-
 
 
         return annonce;
@@ -407,7 +376,6 @@ public User findByFirstNameUserPost(@ModelAttribute("name") String name) throws 
     mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
 
     User UsersAPI = mapper.readValue(usersAPI, User.class);
-    logger.info("xxxxxxxxxxxxxxxx"+UsersAPI.getFirstName());
     return UsersAPI;
 }
 
@@ -419,7 +387,6 @@ public User findByFirstNameUserPost(@ModelAttribute("name") String name) throws 
 
         ObjectMapper mapper = new ObjectMapper();
         User UsersAPI = mapper.readValue(usersAPI, User.class);
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
         return UsersAPI;
     }
 
@@ -431,7 +398,6 @@ public User findByFirstNameUserPost(@ModelAttribute("name") String name) throws 
 
         ObjectMapper mapper = new ObjectMapper();
         Trajet UsersAPI = mapper.readValue(usersAPI, Trajet.class);
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
         return UsersAPI;
     }
 
@@ -444,17 +410,13 @@ public User findByFirstNameUserPost(@ModelAttribute("name") String name) throws 
         mapper.findAndRegisterModules();
 
         Annonce UsersAPI = mapper.readValue(usersAPI, Annonce.class);
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
         return UsersAPI;
     }
 
 
     @GetMapping(value = "/sendError", produces = "application/json")
     public void ErrorPage() throws MalformedURLException, JsonProcessingException {
-/*        URL url=new URL("http://localhost:8090/present/errorLogin");
 
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
-        return "redirect:http://localhost:8090/present/errorLogin";*/
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -498,7 +460,6 @@ public User findByFirstNameUserPost(@ModelAttribute("name") String name) throws 
 
 
 
-    //logger.info("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"+x);
 
 
         return jsonObject.toString();

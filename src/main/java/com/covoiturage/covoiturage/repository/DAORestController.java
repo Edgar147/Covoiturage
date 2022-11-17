@@ -102,42 +102,4 @@ public class DAORestController {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-    @PostMapping(value = "/saveUser", consumes = "application/json", produces = "application/json")
-    public void saveUser(@RequestBody User user) {
-
-        userRepositoryImpl.save(user);
-    }
-*/
-
-
-
-
-
-/*
-    @PostMapping("/annonces-tout")
-    public Annonce addAnnonce(@RequestBody Annonce theAnnonce) {
-
-        theAnnonce.setId(0);
-        theAnnonce.setDate(null);
-        annonceService.save(theAnnonce);
-
-        return theAnnonce;
-    }
-*/
-
-
-
 }

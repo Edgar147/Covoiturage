@@ -16,15 +16,13 @@ import java.util.List;
 @Component("trajetService")
 public class TrajetServiceImpl implements Services<Trajet> {
 
-/*	@Autowired
-	private TrajetDAO trajetDAO;*/
+
 
 	private TrajetRepository trajetRepository;
 	private ServiceRestController serviceRestController=new ServiceRestController();
 
 
 
-	// VERY IMPORTANt!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	@Override
 	public Trajet findById(int theId) {

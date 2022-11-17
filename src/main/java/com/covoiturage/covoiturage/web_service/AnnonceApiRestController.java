@@ -80,14 +80,6 @@ public class AnnonceApiRestController {
 
 
 
-
-
-
-
-
-
-
-
         RestTemplate restTemplateTrajet = new RestTemplate();
         HttpHeaders headersTrajet = new HttpHeaders();
         headersTrajet.setContentType(MediaType.APPLICATION_JSON);
@@ -96,9 +88,7 @@ public class AnnonceApiRestController {
 
         ObjectMapper mapperTrajet = new ObjectMapper();
 
-/*
-        Map<String,Object> mapTrajet = mapperTrajet.readValue(reponse,  HashMap.class);
-*/
+
 
         jsonObjectTrajet.put("userId",userId);
 
@@ -120,20 +110,7 @@ public class AnnonceApiRestController {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
         return jsonObject.toString();
-
-
 
     }
 
@@ -154,7 +131,6 @@ public class AnnonceApiRestController {
 
 
         HttpEntity<String> request = new HttpEntity<String>( headers);
-        //String personResultAsJsonStr =restTemplate.exchange(createPersonUrl, request, String.class);//C'est ça qui post
 
 
         ResponseEntity<HashMap> result = restTemplate.exchange(createPersonUrl, HttpMethod.GET, request, HashMap.class);

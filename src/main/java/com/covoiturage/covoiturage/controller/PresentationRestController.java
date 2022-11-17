@@ -3,12 +3,10 @@ package com.covoiturage.covoiturage.controller;
 import com.covoiturage.covoiturage.entity.Annonce;
 import com.covoiturage.covoiturage.entity.Trajet;
 import com.covoiturage.covoiturage.entity.User;
-import com.covoiturage.covoiturage.service.Services;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,7 +67,6 @@ public class PresentationRestController {
 
         ObjectMapper mapper = new ObjectMapper();
         List<User> listUsersAPI = Arrays.asList(mapper.readValue(usersAPI, User[].class));
-//logger.info("xxxxxxxxxxxxxxxxxxxxx"+listUsersAPI.get(0).getFirstName());
 
         return listUsersAPI;
     }
@@ -83,7 +79,6 @@ public class PresentationRestController {
 
         ObjectMapper mapper = new ObjectMapper();
         User UsersAPI = mapper.readValue(usersAPI, User.class);
-       // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
         return UsersAPI;
     }
 
@@ -99,7 +94,6 @@ public class PresentationRestController {
         mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
 
         User UsersAPI = mapper.readValue(usersAPI, User.class);
-        logger.info("xxxxxxxxxxxxxxxx"+UsersAPI.getFirstName());
         return UsersAPI;
     }
 
@@ -142,7 +136,6 @@ public class PresentationRestController {
 
         ObjectMapper mapper = new ObjectMapper();
         List<Trajet> listTrajetsAPI = Arrays.asList(mapper.readValue(usersAPI, Trajet[].class));
-//logger.info("xxxxxxxxxxsgdfgsgrsrgxxxxxxxxxxx"+listTrajetsAPI.toString());
 
         return listTrajetsAPI;
     }
@@ -155,7 +148,6 @@ public class PresentationRestController {
 
         ObjectMapper mapper = new ObjectMapper();
         Trajet trajet = mapper.readValue(trajetAPI, Trajet.class);
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
         return trajet;
     }
 
@@ -183,12 +175,6 @@ public class PresentationRestController {
                 new HttpEntity<String>(personJsonObject.toString(), headers);
         String personResultAsJsonStr =
                 restTemplate.postForObject(createPersonUrl, request, String.class);//C'est ça qui post
-/*
-        JsonNode root = objectMapper.readTree(personResultAsJsonStr);
-*//*
-logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
-
-
 
         return trajet;
 
@@ -211,7 +197,6 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
         mapper.findAndRegisterModules();// Pour que jackson comprends le LocalDateTime
 
         List<Annonce> listAnnoncesAPI = Arrays.asList(mapper.readValue(usersAPI, Annonce[].class));
-//logger.info("xxxxxxxxxxxxxxxxxxxxx"+listUsersAPI.get(0).getFirstName());
 
         return listAnnoncesAPI;
     }
@@ -225,7 +210,6 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
         mapper.findAndRegisterModules();// Pour que jackson comprends le LocalDateTime
 
         Annonce annonce = mapper.readValue(annonceAPI, Annonce.class);
-        // logger.info("fffffffffffffffffffff"+listUsersAPI.getFirstName());
         return annonce;
     }
 
@@ -277,7 +261,6 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
         }
         for (int i = 0; i < theAnnonces.size(); i++) {
-            logger.info("RRRRRRRRRRRRRRRRRRR"+theAnnonces.get(i).getDate());
             boolean trouve=false;
             for (int j = 0; j < annonceIds.size(); j++) {
                 if (theAnnonces.get(i).getId() ==annonceIds.get(j) && trouve==false){
@@ -365,7 +348,6 @@ public void listeDesPropositions( List<Annonce> theAnnonces,List<String> theUser
             theUsersNomPrenom.add(this.findByIdUser(theTrajets.get(i).getUserId()).getFirstName()+ " "+this.findByIdUser(theTrajets.get(i).getUserId()).getLastName());
             proposedUserId.add(theTrajets.get(i).getUserId());
 
-//ATTTTTTTTENTIIOOON, faut pas prendre conducteur
             if (theTrajets.get(i).getEstAccepte()==1) {
                 reponseConducteur.add(1);
             }
