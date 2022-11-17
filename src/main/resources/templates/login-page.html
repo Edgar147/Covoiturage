@@ -9,15 +9,16 @@
 	crossorigin="anonymous">
 <title>Login</title>
 </head>
-<body
-	style="background-image: url('images/background-index2.png'); background-size: cover">
+<body style="background-image: url('images/backgr.jpg'); background-size: cover">
+<div style="opacity:0.95; display: inline-block">
+	<a class="btn btn-danger btn-lg" href="/registration">Inscrivez-vous</a>
 
-	<div class="container py-5 bg-light " style="margin-top: 200px;   width: 30%;  background-image: url('images/login_background.jpg');background-size: cover">
-
+</div>
+	<div class="container py-5 bg-light " style=" opacity:0.95;margin-top: 200px;   width: 30%;  background-image: url('images/login_background.jpg');background-size: cover">
 
 
 		<!-- Login Form -->
-		<form th:action="@{/authenticateTheUser}" method="POST"	class="form-horizontal">
+		<form  th:action="@{/authenticateTheUser}" method="POST"	class="form-horizontal">
 
 			<!-- Place for messages: error, alert etc ... -->
 			<div class="col-xs-15">
@@ -63,8 +64,7 @@
 			</div>
 
 		</form>
-					<a href="/registration">Inscrivez-vous</a>
-		
+
 
 	</div>
 

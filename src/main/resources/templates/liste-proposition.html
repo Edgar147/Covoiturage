@@ -71,8 +71,8 @@
 
 
         <span th:if="${reponseConducteur[tempAnnoncesStat.index]} == 0" >
-   <a th:text="Accepter" th:href="@{/accepte-proposition/{id1}/{id2}    (id1=${proposedUserId[tempAnnoncesStat.index]}    , id2=${tempAnnonces.id})    }" />
-        <a th:text="Refuser" th:href="@{/refuse-proposition/{id1}/{id2}    (id1=${proposedUserId[tempAnnoncesStat.index]}    ,id2=${tempAnnonces.id})    }" />
+   <a class="btn btn-success btn-sm" th:text="Accepter" th:href="@{/accepte-proposition/{id1}/{id2}    (id1=${proposedUserId[tempAnnoncesStat.index]}    , id2=${tempAnnonces.id})    }" />
+        <a class="btn btn-danger btn-sm" th:text="Refuser" th:href="@{/refuse-proposition/{id1}/{id2}    (id1=${proposedUserId[tempAnnoncesStat.index]}    ,id2=${tempAnnonces.id})    }" />
 
              </span>
         <span th:if="${reponseConducteur[tempAnnoncesStat.index]} == 1" >
