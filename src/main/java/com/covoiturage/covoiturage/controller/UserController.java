@@ -206,7 +206,7 @@ public class UserController {
 	public String DetailsTrajet(@ModelAttribute("annonce_id") int annonceId, Model theModel) throws MalformedURLException, JsonProcessingException {
 
 
-		List<User> userList =new ArrayList<>();
+		List<User> userList =new ArrayList<User>();
 
 		presentation.details(userList,annonceId);
 
@@ -216,5 +216,22 @@ public class UserController {
 
 		return "details";
 		}
+
+
+	@GetMapping("/details-annonce")
+	public String DetailsAnnonce(@ModelAttribute("annonce_id") int annonceId, Model theModel) throws MalformedURLException, JsonProcessingException {
+
+		Annonce theAnnonce = presentation.findByIdAnnonce(annonceId);
+		String link=presentation.getAnnonceDetails(theAnnonce);;
+
+
+
+		theModel.addAttribute("annonce", theAnnonce);
+		theModel.addAttribute("link", link);
+
+
+
+		return "details-annonce";
+	}
 
 }

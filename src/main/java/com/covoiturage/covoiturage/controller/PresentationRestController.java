@@ -142,7 +142,7 @@ public class PresentationRestController {
 
         ObjectMapper mapper = new ObjectMapper();
         List<Trajet> listTrajetsAPI = Arrays.asList(mapper.readValue(usersAPI, Trajet[].class));
-//logger.info("xxxxxxxxxxxxxxxxxxxxx"+listUsersAPI.get(0).getFirstName());
+//logger.info("xxxxxxxxxxsgdfgsgrsrgxxxxxxxxxxx"+listTrajetsAPI.toString());
 
         return listTrajetsAPI;
     }
@@ -438,10 +438,11 @@ public void accepteProposition(int userIdPropose, int annonceId) throws Malforme
             }
         }
 
-
+logger.info("FFFFFFFFFFFEFEFEFE"+userIds.size());
         for (int i = 0; i < userIds.size(); i++) {
             userList.add(this.findByIdUser(userIds.get(i)));
         }
+
     }
 
 
@@ -468,6 +469,7 @@ public void accepteProposition(int userIdPropose, int annonceId) throws Malforme
         personJsonObject.put("date",new_date);
         personJsonObject.put("depart",annonce.getDepart());
         personJsonObject.put("arrive",annonce.getArrive());
+        personJsonObject.put("commentaire",annonce.getCommentaire());
 
         String createPersonUrl = "http://localhost:8090/services/saveAnnoncePost";
 
@@ -526,5 +528,17 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
     }
 
 
+/*    public List<String> getVilles(Annonce theAnnonce){
+        List<String> list=new ArrayList<>();
+        list.add(theAnnonce.getDepart());
+        list.add(theAnnonce.)
+
+    }*/
+
+
+    public String getAnnonceDetails(Annonce theAnnonce) throws MalformedURLException, JsonProcessingException {
+        String link="\t<iframe src=\"https://www.google.com/maps/embed/v1/directions?key=AIzaSyBN4_F3cBbadQ4x1PqZf6_OCktum1dmkJg&origin="+theAnnonce.getDepart()+"&destination="+theAnnonce.getArrive()+"&avoid=tolls|highways\" width=\"400\" height=\"350\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>\n";
+  return  link;
+   }
 
 }

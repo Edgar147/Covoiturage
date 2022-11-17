@@ -77,7 +77,7 @@ public class AnnonceServiceImpl implements Services<Annonce> {
 
 		try {
 			serviceRestController.saveAnnonce(theAnnonce);
-		} catch (JsonProcessingException e) {
+		} catch (JsonProcessingException | MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
 

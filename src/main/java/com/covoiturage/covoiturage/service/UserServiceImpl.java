@@ -101,14 +101,14 @@ private ServiceRestController serviceRestController=new ServiceRestController();
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		User user = null;
 
-
+/*
 		try {
 			api_exterieure.distance("Nancy","Metz");
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
-		}
+		}*/
 
 
 		try {

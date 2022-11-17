@@ -33,6 +33,7 @@
       <th>Depart</th>
       <th>Arrive</th>
       <th>Status</th>
+      <th>Details</th>
 
 
 
@@ -86,6 +87,7 @@
                               <span th:case="2">Refusé</span>
                               <span th:case="3">Vous conduct</span>
                               <span th:case="4">Demande envoyée</span>
+
                           </span>
 <!--
               </span>
@@ -114,6 +116,7 @@
         </span>-->
 
           </td>
+          <td>    <a th:text="Details" th:href="@{/details-annonce(annonce_id=${tempAnnonces.id})}" /></td>
 
 
       </tr>

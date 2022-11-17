@@ -4,6 +4,7 @@ import com.covoiturage.covoiturage.controller.UserController;
 import com.covoiturage.covoiturage.entity.Annonce;
 import com.covoiturage.covoiturage.entity.Trajet;
 import com.covoiturage.covoiturage.entity.User;
+import com.covoiturage.covoiturage.web_service.API_EXT_INE;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,13 +31,16 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/services")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceRestController {
     Logger logger = LoggerFactory.getLogger(UserController.class);
+    API_EXT_INE api_exterieure=new API_EXT_INE();
 
     @Autowired
     @Qualifier("userService")
@@ -147,6 +151,7 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
     @GetMapping("/trajets")
     public List<Trajet> findAllTrajets() throws MalformedURLException, JsonProcessingException {
 
+
         URL url=new URL("http://localhost:8090/dao/trajets");
         String usersAPI=this.getApi(url);
 
@@ -242,7 +247,33 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
 
 
     @GetMapping(value = "/saveAnnonce", produces = "application/json")
-    public Annonce saveAnnonce(Annonce annonce) throws JsonProcessingException {
+    public Annonce saveAnnonce(Annonce annonce) throws JsonProcessingException, MalformedURLException {
+
+        RestTemplate restTemplateCoord = new RestTemplate();
+        HttpHeaders headersCoord = new HttpHeaders();
+        headersCoord.setContentType(MediaType.APPLICATION_JSON);
+        JSONObject coordJsonObject = new JSONObject();
+
+        coordJsonObject.put("depart",annonce.getDepart());
+        coordJsonObject.put("arrive",annonce.getArrive());
+
+        String createCoordUrl = "http://localhost:8090/webservice/coordinates";
+
+
+        HttpEntity<String> requestCoord =
+                new HttpEntity<String>(coordJsonObject.toString(), headersCoord);
+        Map<String,Double> listCoord =  restTemplateCoord.postForObject(createCoordUrl, requestCoord, HashMap.class);//C'est ça qui post
+
+        //logger.info("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"+coordResultAsJsonStr);
+        double latitude1= listCoord.get("latitude1");
+        double longitude1= listCoord.get("longitude1");
+        double latitude2= listCoord.get("latitude2");
+        double longitude2= listCoord.get("longitude2");
+
+
+
+
+
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -254,9 +285,67 @@ logger.info("TTTTTTTTTTTTTTTTTTTTT"+personResultAsJsonStr);*/
         personJsonObject.put("date",new_date);
         personJsonObject.put("depart",annonce.getDepart());
         personJsonObject.put("arrive",annonce.getArrive());
+        personJsonObject.put("commentaire",annonce.getCommentaire());
 
+/*        List<Double> list=api_exterieure.coordinateAPI(annonce.getDepart(),annonce.getArrive());
+
+        double latitude1= list.get(0);
+        double longitude1= list.get(1);
+        double latitude2= list.get(2);
+        double longitude2= list.get(3);*/
+        annonce.setLatitude1(latitude1);
+        annonce.setLongitude1(longitude1);
+        annonce.setLatitude2(latitude2);
+        annonce.setLongitude2(longitude2);
+        //String duree=api_exterieure.duree(latitude1,longitude1,latitude2,longitude2);
+
+//annonce.setDuree(duree);
+
+
+
+
+
+
+
+
+
+
+
+
+        RestTemplate restTemplateDuree = new RestTemplate();
+        HttpHeaders headersDuree = new HttpHeaders();
+        headersDuree.setContentType(MediaType.APPLICATION_JSON);
+        JSONObject dureeJsonObject = new JSONObject();
+
+        dureeJsonObject.put("latitude1",annonce.getLatitude1());
+        dureeJsonObject.put("longitude1",annonce.getLongitude1());
+        dureeJsonObject.put("latitude2",annonce.getLatitude2());
+        dureeJsonObject.put("longitude2",annonce.getLongitude2());
+
+        String createDureeUrl = "http://localhost:8090/webservice/duree";
+
+
+        HttpEntity<String> requestDuree =
+                new HttpEntity<String>(dureeJsonObject.toString(), headersCoord);
+        Map<String,String> jsonDuree =  restTemplateDuree.postForObject(createDureeUrl, requestDuree, HashMap.class);//C'est ça qui post
+
+
+
+String duree=jsonDuree.get("duree");
+
+annonce.setDuree(duree);
+
+
+
+
+
+
+        personJsonObject.put("duree",annonce.getDuree());
+        personJsonObject.put("latitude1",annonce.getLatitude1());
+        personJsonObject.put("longitude1",annonce.getLongitude1());
+        personJsonObject.put("latitude2",annonce.getLatitude2());
+        personJsonObject.put("longitude2",annonce.getLongitude2());
         String createPersonUrl = "http://localhost:8090/dao/saveAnnonce";
-
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();// Pour que jackson comprends le LocalDateTime
@@ -391,6 +480,32 @@ public User findByFirstNameUserPost(@ModelAttribute("name") String name) throws 
 
 
     }
+
+
+    @GetMapping(value = "/sizeAnnonce")
+    public String getSizeAnnonce() throws MalformedURLException, JsonProcessingException {
+
+        int x=this.findAllAnnonces().size();
+
+
+        JSONObject jsonObject = new JSONObject();
+
+
+
+
+        jsonObject.put("size",x);
+
+
+
+
+    //logger.info("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"+x);
+
+
+        return jsonObject.toString();
+    }
+
+
+
 
 
 
